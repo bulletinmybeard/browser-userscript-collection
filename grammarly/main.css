@@ -1,0 +1,75 @@
+
+/* **************************************************************** */
+/* ********************** DOCUMENT EDIT PAGE ********************** */
+/* **************************************************************** */
+
+/*
+    ¯\_(ツ)_/¯
+ */
+[data-name*="sidebar-tier"] {
+}
+
+/* **************************************************************** */
+/* *********************** DOCUMENT LISTING *********************** */
+/* **************************************************************** */
+
+/*
+    The search input field is in higher resolutions
+    too wide, so I shortened the field length
+    to be not longer than two document items.
+ */
+[class*="search_input-header"] {
+    width: 22.5rem;
+}
+
+/*
+    Background image alignment adjusted
+ */
+[class*="document_item-add"] {
+    margin-top: -17px;
+    text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+/*
+    Limit the title length to avoid breaking the layout.
+    (`-webkit-line-clamp` sets the row limit!)
+  */
+[data-name*="doc-title"] {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/*
+    Hide all document previews
+ */
+[data-name*="doc-first-content"] {
+    display: none;
+}
+
+/*
+    Reduce the height of the document items
+ */
+[class*="document_item-itemWrapper"] {
+    height: 110px;
+}
+
+/*
+    ¯\_(ツ)_/¯
+ */
+[class*="document_item-remove"],
+[class*="document_item-downloadProofread"],
+[class*="document_item-download"] {
+}
+
+/*
+    Hide the toggleable item action bar for good
+ */
+/*[class*="document_item-actions"],*/
+/*[class*="document_item-errors"] {*/
+/*    display: none !important;*/
+/*}*/

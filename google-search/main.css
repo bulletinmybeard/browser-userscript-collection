@@ -1,0 +1,6 @@
+/*
+    Hide daily Doodles instead of removing them to prevent the layout from collapsing.
+ */
+html > body > div:first-of-type > div:nth-of-type(2) > div {
+    visibility: hidden;
+}
