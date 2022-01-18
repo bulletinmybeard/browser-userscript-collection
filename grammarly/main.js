@@ -18,13 +18,98 @@ class Grammarly {
                 childList: true,
                 subtree: true,
             })
+
+        if (new RegExp('\\/ddocs\\/[0-9]+$').test(this.lastURL)) {
+            this.documentEditPage()
+        } else if (!new RegExp('\\/apps$').test(this.lastURL)) {
+            this.documentListingPage()
+        }
     }
 
+    deleteDocument() {
+
+        const params = Object
+            .fromEntries(new URLSearchParams(location.search).entries())
+
+        if (params.hasOwnProperty('action')
+            && params.hasOwnProperty('docId')) {
+
+            let count = 0
+
+            const maxTries = 4
+            const timeoutInMs = 500
+            const selectorQuery = `[data-name-id="${params.docId}"]`
+
+            const interval = setInterval(() => {
+                const documentLink = document.querySelector(selectorQuery)
+                if (count === maxTries) {
+                    clearInterval(interval)
+                    console.error(`Selector query '${selectorQuery}' failed (Element not found)`)
+                    return
+                }
+                if (documentLink) {
+                    clearInterval(interval)
+
+                    const deleteButton = document.querySelector('[data-name="doc-delete-btn"]')
+                    if (deleteButton) {
+                        deleteButton.style.backgroundColor = 'red'
+                        deleteButton.click()
+                        window.history.pushState({}, document.title, window.location.pathname)
+                    }
+                }
+                count++
+            }, timeoutInMs)
+        }
+    }
+
+    /**
+     * Everything related to the document edit page.
+     * @return {undefined}
+     */
     documentEditPage() {
+        /**
+         * Get the document ID from the URL.
+         */
+        const documentId = (window.location.pathname).split('/').at(-1)
+
+        const deleteBtnElement = document.createElement('a')
+        deleteBtnElement.appendChild(document.createTextNode('[click to delete me]'))
+        deleteBtnElement.title = '[click to delete me]'
+        deleteBtnElement.href = `/?docId=${documentId}&action=delete`
+
+        this.applyInlineStyles(deleteBtnElement, {
+            display: 'block',
+            'z-index': 99999,
+            background: 'red',
+            position: 'absolute',
+            top: '4rem',
+            left: '1rem',
+            padding: '1rem'
+        })
+
+        // ...
+        document.body.appendChild(deleteBtnElement);
     }
 
+    /**
+     * Everything related to the document listing page.
+     * @return {undefined}
+     */
     documentListingPage() {
         this.updateListItems()
+        this.deleteDocument()
+    }
+
+    /**
+     * Set inline styles from object.
+     * @param {HTMLElement} element
+     * @param {object} styles
+     * @return {undefined}
+     */
+    applyInlineStyles(element, styles) {
+        for (const key in styles) {
+            element.style[key] = styles[key]
+        }
     }
 
     updateListItems() {
@@ -84,9 +169,6 @@ class Grammarly {
     }
 
     alterDocumentListinglement(node) {
-        /**
-         *
-         */
         const previewElement = node.querySelector('[data-name="doc-first-content"]')
         if (previewElement) {
             node.setAttribute('title', previewElement.innerText)
